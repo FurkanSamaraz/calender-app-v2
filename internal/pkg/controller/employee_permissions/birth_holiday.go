@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	api_service "main/services/employee_permissions"
-	api_structure "main/structures/employee_permissions"
+	api_service "main/internal/pkg/services/employee_permissions"
+	api_structure "main/internal/pkg/structures/employee_permissions"
 
 	"github.com/gofiber/fiber/v2"
 )

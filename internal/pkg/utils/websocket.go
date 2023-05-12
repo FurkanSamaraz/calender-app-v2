@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	redisrepo "main/internal/pkg/redisrepo"
+	"main/internal/pkg/redisrepo"
 	api_structures "main/internal/pkg/structures/chat"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,11 +13,11 @@ import (
 	"github.com/gofiber/websocket/v2"
 )
 
-type Message struct {
-	Type string              `json:"type"`
-	User string              `json:"user,omitempty"`
-	Chat api_structures.Chat `json:"chat,omitempty"`
-}
+// type Message struct {
+// 	Type string              `json:"type"`
+// 	User string              `json:"user,omitempty"`
+// 	Chat api_structures.Chat `json:"chat,omitempty"`
+// }
 
 var (
 	clients = make(map[string]*api_structures.Client)

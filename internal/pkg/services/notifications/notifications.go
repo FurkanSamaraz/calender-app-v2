@@ -1,7 +1,7 @@
 package services
 
 import (
-	api_structure "main/structures/notifications"
+	api_structure "main/internal/pkg/structures/notifications"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

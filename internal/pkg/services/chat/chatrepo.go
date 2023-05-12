@@ -3,8 +3,8 @@ package service
 import (
 	"fmt"
 	"log"
-	api_structure "main/model"
-	"main/pkg/redisrepo"
+	"main/internal/pkg/redisrepo"
+	api_structure "main/internal/pkg/structures/chat"
 )
 
 func (r *ChatService) VerifyContact(username string) (*api_structure.Response, error) {

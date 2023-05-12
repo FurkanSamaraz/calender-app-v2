@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	api_service "main/services/expense_tracking"
-	api_structure "main/structures/expense_tracking"
+	api_service "main/internal/pkg/services/expense_tracking"
+	api_structure "main/internal/pkg/structures/expense_tracking"
 
 	"github.com/gofiber/fiber/v2"
 )

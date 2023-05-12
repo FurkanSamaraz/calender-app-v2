@@ -2,8 +2,8 @@ package services
 
 import (
 	"fmt"
-	Employees_api_structure "main/structures/employee_requests"
-	api_structure "main/structures/notifications"
+	Employees_api_structure "main/internal/pkg/structures/employee_requests"
+	api_structure "main/internal/pkg/structures/notifications"
 
 	"github.com/go-gomail/gomail"
 	"gorm.io/gorm"

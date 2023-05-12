@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	api_service "main/services/integration"
-	api_structure "main/structures/integration"
+	api_service "main/internal/pkg/services/integration"
+	api_structure "main/internal/pkg/structures/integration"
 
 	"github.com/gofiber/fiber/v2"
 )

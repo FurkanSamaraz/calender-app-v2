@@ -1,7 +1,7 @@
 package services
 
 import (
-	api_structure "main/structures/calendar_basics"
+	api_structure "main/internal/pkg/structures/calendar_basics"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

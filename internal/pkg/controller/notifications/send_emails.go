@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	api_service "main/services/notifications"
-	api_structure "main/structures/notifications"
+	api_service "main/internal/pkg/services/notifications"
+	api_structure "main/internal/pkg/structures/notifications"
 
 	"github.com/gofiber/fiber/v2"
 )

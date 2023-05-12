@@ -1,7 +1,7 @@
 package services
 
 import (
-	api_structure "main/structures/expense_tracking"
+	api_structure "main/internal/pkg/structures/expense_tracking"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

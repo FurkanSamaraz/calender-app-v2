@@ -5,7 +5,7 @@ import (
 
 	model "main/internal/pkg/structures/chat"
 
-	api_service "main/internal/pkg/service/chat"
+	api_service "main/internal/pkg/services/chat"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"

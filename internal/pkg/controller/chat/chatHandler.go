@@ -3,7 +3,7 @@ package controller
 import (
 	"log"
 
-	redisrepo "main/internal/pkg/redisrepo"
+	"main/internal/pkg/redisrepo"
 	api_structures "main/internal/pkg/structures/chat"
 )
 

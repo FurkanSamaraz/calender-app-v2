@@ -1,7 +1,7 @@
 package services
 
 import (
-	api_structure "main/structures/employee_permissions"
+	api_structure "main/internal/pkg/structures/employee_permissions"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

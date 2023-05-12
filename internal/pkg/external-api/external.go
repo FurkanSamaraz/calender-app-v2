@@ -1,7 +1,7 @@
 package external_api
 
 import (
-	retail "main/retail"
+	retail "main/internal/pkg/retail"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"

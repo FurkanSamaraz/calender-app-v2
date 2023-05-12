@@ -1,23 +1,23 @@
 package retail
 
 import (
-	controllerCalendarBasics "main/controller/calendar_basics"
-	servicesCalendarBasics "main/services/calendar_basics"
+	controllerCalendarBasics "main/internal/pkg/controller/calendar_basics"
+	servicesCalendarBasics "main/internal/pkg/services/calendar_basics"
 
-	controllerEmployeePermissions "main/controller/employee_permissions"
-	servicesEmployeePermissions "main/services/employee_permissions"
+	controllerEmployeePermissions "main/internal/pkg/controller/employee_permissions"
+	servicesEmployeePermissions "main/internal/pkg/services/employee_permissions"
 
-	controllerEmployeeRequests "main/controller/employee_requests"
-	servicesEmployeeRequests "main/services/employee_requests"
+	controllerEmployeeRequests "main/internal/pkg/controller/employee_requests"
+	servicesEmployeeRequests "main/internal/pkg/services/employee_requests"
 
-	controllerExpenseTracking "main/controller/expense_tracking"
-	servicesExpenseTracking "main/services/expense_tracking"
+	controllerExpenseTracking "main/internal/pkg/controller/expense_tracking"
+	servicesExpenseTracking "main/internal/pkg/services/expense_tracking"
 
-	controllerIntegration "main/controller/integration"
-	servicesIntegration "main/services/integration"
+	controllerIntegration "main/internal/pkg/controller/integration"
+	servicesIntegration "main/internal/pkg/services/integration"
 
-	controllerNotifications "main/controller/notifications"
-	servicesNotifications "main/services/notifications"
+	controllerNotifications "main/internal/pkg/controller/notifications"
+	servicesNotifications "main/internal/pkg/services/notifications"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"

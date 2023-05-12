@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	api_service "main/services/calendar_basics"
-	api_structure "main/structures/calendar_basics"
+	api_service "main/internal/pkg/services/calendar_basics"
+	api_structure "main/internal/pkg/structures/calendar_basics"
 
 	"github.com/gofiber/fiber/v2"
 )

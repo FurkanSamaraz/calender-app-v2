@@ -1,7 +1,7 @@
 package services
 
 import (
-	api_structure "main/structures/integration"
+	api_structure "main/internal/pkg/structures/integration"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
