@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"log"
 
-	api_structures "main/internal/pkg/structures/chat"
+	api_structure_chat "main/internal/pkg/structures/chat"
+	api_structures "main/internal/pkg/structures/employee_requests"
 
 	"github.com/go-redis/redis/v8"
 )
 
-func RegisterNewUser(u *api_structures.User) error {
+func RegisterNewUser(u *api_structures.Employee) error {
 	// redis-cli
 	// SYNTAX: SET key value
 	// SET username password
@@ -22,7 +23,7 @@ func RegisterNewUser(u *api_structures.User) error {
 		return err
 	}
 
-	err = RedisClient.Set(context.Background(), u.Username, data, 0).Err()
+	err = RedisClient.Set(context.Background(), u.Name, data, 0).Err()
 	if err != nil {
 		log.Println("error while adding new user", err)
 		return err
@@ -39,17 +40,17 @@ func IsUserExist(username string) (bool, error) {
 	return exists == 1, nil
 }
 
-func IsUserAuthentic(u *api_structures.User) error {
+func IsUserAuthentic(u *api_structures.Employee) error {
 	// redis-cli
 	// SYNTAX: GET key
 	// GET username
 
-	data, err := RedisClient.Get(context.Background(), u.Username).Bytes()
+	data, err := RedisClient.Get(context.Background(), u.Name).Bytes()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var savedUser api_structures.User
+	var savedUser api_structures.Employee
 	err = json.Unmarshal(data, &savedUser)
 	if err != nil {
 		log.Fatal(err)
@@ -62,12 +63,12 @@ func IsUserAuthentic(u *api_structures.User) error {
 	return nil
 }
 
-func FetchChatBetween(username1, username2 string) ([]api_structures.Chat, error) {
+func FetchChatBetween(username1, username2 string) ([]api_structure_chat.Chat, error) {
 	// Construct the Redis key for the chat messages
 	//chatKey := fmt.Sprintf("chats:%s:%s", username1, username2)
 	// Construct the Redis key for the chat messages
 	chatKey := fmt.Sprintf("chats:%s:%s", username1, username2)
-	var chatHistory []api_structures.Chat
+	var chatHistory []api_structure_chat.Chat
 	// Retrieve the chat messages within the specified time range
 	chatData, err := RedisClient.Get(context.Background(), chatKey).Bytes()
 	if err != nil {

@@ -11,6 +11,7 @@ type Employee struct {
 	Name       string    `db:"name"`
 	Department string    `db:"department"`
 	Email      string    `db:"email"`
+	Password   string    `json:"password"`
 	Position   string    `db:"position"`
 	HireDate   time.Time `db:"hire_date"`
 }

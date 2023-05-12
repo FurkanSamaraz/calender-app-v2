@@ -19,7 +19,13 @@ import (
 	controllerNotifications "main/internal/pkg/controller/notifications"
 	servicesNotifications "main/internal/pkg/services/notifications"
 
+	controllerChat "main/internal/pkg/controller/chat"
+	servicesChat "main/internal/pkg/services/chat"
+
+	webSocket "main/internal/pkg/utils"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/websocket/v2"
 	"gorm.io/gorm"
 )
 
@@ -362,6 +368,24 @@ func Run(app fiber.Router, db *gorm.DB) {
 
 					subSend_EmailsGroup.Get("/", Send_EmailsController.Send_Email).Name("Send_Send_EmailsWithId")
 				}
+
+			}
+		}
+		{
+			{
+
+				ChatGroup := app.Group("/Chat")
+				ChatController := controllerChat.ChatController{Svc: servicesChat.ChatService{DB: db}}
+
+				ChatGroup.Get("/search", ChatController.LoginHandler).Name("LoginChat")
+				ChatGroup.Post("/single", ChatController.RegisterHandler).Name("RegisterChat")
+
+			}
+		}
+		{
+			{
+
+				app.Get("/ws", websocket.New(webSocket.WsHandler)).Name("WebSocketChat")
 
 			}
 		}

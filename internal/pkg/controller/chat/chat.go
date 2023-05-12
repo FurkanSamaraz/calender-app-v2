@@ -3,7 +3,8 @@ package controller
 import (
 	"fmt"
 
-	model "main/internal/pkg/structures/chat"
+	api_structure_chat "main/internal/pkg/structures/chat"
+	api_structures "main/internal/pkg/structures/employee_requests"
 
 	api_service "main/internal/pkg/services/chat"
 
@@ -21,29 +22,29 @@ type ChatController struct {
 // @Tags          User
 // @Accept        json
 // @Produce       json
-// @Param         body body model.User true "Request body"
-// @Success       200 {object} model.Response
-// @Failure       500 {object} model.ErrorResponse
+// @Param         body body api_structures.Employee true "Request body"
+// @Success       200 {object} api_structure_chat.Response
+// @Failure       500 {object} api_structure_chat.ErrorResponse
 // @Router        /register [post]
 func (controller *ChatController) RegisterHandler(c *fiber.Ctx) error {
-	var user model.User
+	var user api_structures.Employee
 	err := c.BodyParser(&user)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Fetch Data",
 			Message: "Invalid request",
 		})
 	}
 	res := Register(&user)
-	if user.Username == "" || user.Password == "" {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+	if user.Name == "" || user.Password == "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Fetch Data",
 			Message: "Username and password are required",
 		})
 	}
 	result, rerr := controller.Svc.Register(user)
 	if rerr != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Fetch Data",
 			Message: rerr.Error(),
 		})
@@ -60,22 +61,22 @@ func (controller *ChatController) RegisterHandler(c *fiber.Ctx) error {
 // @Tags          User
 // @Accept        json
 // @Produce       json
-// @Param         body body model.User true "Request body"
-// @Success       200 {object} model.Response
-// @Failure       500 {object} model.ErrorResponse
+// @Param         body body api_structures.Employee true "Request body"
+// @Success       200 {object} api_structure_chat.Response
+// @Failure       500 {object} api_structure_chat.ErrorResponse
 // @Router        /login [post]
 func (controller *ChatController) LoginHandler(c *fiber.Ctx) error {
-	var user model.User
+	var user api_structures.Employee
 	err := c.BodyParser(&user)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Fetch Data",
 			Message: "Invalid request",
 		})
 	}
 
-	if user.Username == "" || user.Password == "" {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+	if user.Name == "" || user.Password == "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Fetch Data",
 			Message: "Username and password are required",
 		})
@@ -83,7 +84,7 @@ func (controller *ChatController) LoginHandler(c *fiber.Ctx) error {
 
 	result, rerr := controller.Svc.Login(user)
 	if rerr != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Create Data",
 			Message: rerr.Error(),
 		})
@@ -103,8 +104,8 @@ func (controller *ChatController) LoginHandler(c *fiber.Ctx) error {
 // @Security      BearerAuth
 // @Accept        json
 // @Produce       json
-// @Success       200 {object} model.Response
-// @Failure       500 {object} model.ErrorResponse
+// @Success       200 {object} api_structure_chat.Response
+// @Failure       500 {object} api_structure_chat.ErrorResponse
 // @Router        /verify-contact [get]
 func (controller *ChatController) VerifyContactHandler(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
@@ -112,7 +113,7 @@ func (controller *ChatController) VerifyContactHandler(c *fiber.Ctx) error {
 
 	res, err := controller.Svc.VerifyContact(claims["username"].(string))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Contact Data",
 			Message: err.Error(),
 		})
@@ -128,8 +129,8 @@ func (controller *ChatController) VerifyContactHandler(c *fiber.Ctx) error {
 // @Produce       json
 // @Param         u1 query string true "Username of user 1"
 // @Param         u2 query string true "Username of user 2"
-// @Success       200 {object} model.Response
-// @Failure       500 {object} model.ErrorResponse
+// @Success       200 {object} api_structure_chat.Response
+// @Failure       500 {object} api_structure_chat.ErrorResponse
 // @Router        /chat-history [get]
 func (controller *ChatController) ChatHistoryHandler(c *fiber.Ctx) error {
 	username1 := c.Query("u1")
@@ -137,7 +138,7 @@ func (controller *ChatController) ChatHistoryHandler(c *fiber.Ctx) error {
 
 	res, err := controller.Svc.ChatHistory(username1, username2)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Chat History Data",
 			Message: err.Error(),
 		})
@@ -152,8 +153,8 @@ func (controller *ChatController) ChatHistoryHandler(c *fiber.Ctx) error {
 // @Security      BearerAuth
 // @Accept        json
 // @Produce       json
-// @Success       200 {object} model.ContactList
-// @Failure       500 {object} model.ErrorResponse
+// @Success       200 {object} api_structure_chat.ContactList
+// @Failure       500 {object} api_structure_chat.ErrorResponse
 // @Router        /contact-list [get]
 func (controller *ChatController) ContactListHandler(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
@@ -161,7 +162,7 @@ func (controller *ChatController) ContactListHandler(c *fiber.Ctx) error {
 
 	res, err := controller.Svc.ContactList(claims["username"].(string))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(model.ErrorResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(api_structure_chat.ErrorResponse{
 			Type:    "Chat List Data",
 			Message: err.Error(),
 		})
@@ -176,9 +177,9 @@ func (controller *ChatController) ContactListHandler(c *fiber.Ctx) error {
 // @Security      ApiKeyAuth
 // @Accept        json
 // @Produce       json
-// @Success       200 {object} model.TokenClaims
-// @Failure       401 {object} model.AuthErrorResponse
-// @Failure       500 {object} model.AuthErrorResponse
+// @Success       200 {object} api_structure_chat.TokenClaims
+// @Failure       401 {object} api_structure_chat.AuthErrorResponse
+// @Failure       500 {object} api_structure_chat.AuthErrorResponse
 // @Router        /auth-middleware [get]
 func (controller *ChatController) AuthMiddleware(c *fiber.Ctx) error {
 	tokenString := c.Get("Authorization")
@@ -194,13 +195,13 @@ func (controller *ChatController) AuthMiddleware(c *fiber.Ctx) error {
 	})
 
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(model.AuthErrorResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(api_structure_chat.AuthErrorResponse{
 			Message: "Geçersiz yetkilendirme belirteci",
 		})
 	}
 
 	if !token.Valid {
-		return c.Status(fiber.StatusUnauthorized).JSON(model.AuthErrorResponse{
+		return c.Status(fiber.StatusUnauthorized).JSON(api_structure_chat.AuthErrorResponse{
 			Message: "Geçersiz yetkilendirme belirteci",
 		})
 	}
