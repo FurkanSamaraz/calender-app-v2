@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Room</title>
+    <style>
+        #videos {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .video {
+            width: 400px;
+            height: 300px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Room</h1>
+    <div id="videos"></div>
+
+    <script>
+        const videosElement = document.getElementById('videos');
+        const roomID = window.location.pathname.split('/').pop();
+        const websocketURL = 'ws://' + window.location.host + '/room/' + roomID + '/websocket';
+        const websocket = new WebSocket(websocketURL);
+        const mediaStreamMap = new Map();
+
+        websocket.onopen = function () {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    const videoElement = document.createElement('video');
+                    videoElement.srcObject = stream;
+                    videoElement.autoplay = true;
+                    videoElement.controls = false;
+                    videoElement.className = 'video';
+                    videosElement.appendChild(videoElement);
+
+                    mediaStreamMap.set(roomID, stream);
+
+                    const mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = function (event) {
+                        websocket.send(event.data);
+                    };
+                    mediaRecorder.start(1000);
+                })
+                .catch(function (error) {
+                    console.error('Error accessing media devices:', error);
+                });
+        };
+
+        websocket.onmessage = function (event) {
+            const data = event.data;
+            const senderRoomID = event.currentTarget.url.split('/').pop();
+
+            if (data instanceof Blob) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    addVideo(reader.result, senderRoomID);
+                };
+                reader.readAsDataURL(data);
+            } else {
+                const message = JSON.parse(data);
+                if (message.event === 'offer' || message.event === 'answer' || message.event === 'candidate') {
+                    const roomID = senderRoomID;
+                    const senderVideoElement = document.getElementById(roomID);
+                    const senderStream = senderVideoElement.srcObject;
+                    const pc = new RTCPeerConnection();
+
+                    senderStream.getTracks().forEach(track => {
+                        pc.addTrack(track, senderStream);
+                    });
+
+                    const receiverStream = new MediaStream();
+
+                    pc.ontrack = function (event) {
+                        event.streams[0].getTracks().forEach(track => {
+                            receiverStream.addTrack(track);
+                        });
+
+                        const videoElement = document.createElement('video');
+                        videoElement.srcObject = receiverStream;
+                        videoElement.autoplay = true;
+                        videoElement.controls = false;
+                        videoElement.className = 'video';
+                        videosElement.appendChild(videoElement);
+                    };
+
+                    pc.setRemoteDescription(message.data)
+                        .then(() => pc.createAnswer())
+                        .then(answer => pc.setLocalDescription(answer))
+                        .then(() => {
+                            const response = {
+                                event: 'answer',
+                                data: pc.localDescription
+                            };
+                            websocket.send(JSON.stringify(response));
+                        })
+                        .catch(error => {
+                            console.error('Error creating answer:', error);
+                        });
+                }
+            }
+        };
+        function addVideo(src, roomID) {
+            if (!mediaStreamMap.has(roomID)) {
+                const videoElement = document.createElement('video');
+                videoElement.srcObject = mediaStreamMap.get(roomID);
+                videoElement.autoplay = true;
+                videoElement.controls = false;
+                videoElement.className = 'video';
+                videosElement.appendChild(videoElement);
+
+                const newStream = new MediaStream();
+                videoElement.srcObject.getTracks().forEach(track => {
+                    newStream.addTrack(track);
+                });
+                mediaStreamMap.set(roomID, newStream);
+            }
+
+            const videoElement = document.createElement('video');
+            videoElement.src = src;
+            videoElement.autoplay = true;
+            videoElement.controls = false;
+            videoElement.className = 'video';
+            videosElement.appendChild(videoElement);
+
+            // Yeni bir stream oluştur ve gelen videoyu buna ekle
+            const newStream = new MediaStream();
+            videoElement.srcObject.getTracks().forEach(track => {
+                newStream.addTrack(track);
+            });
+            mediaStreamMap.set(roomID, newStream);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Conference</title>
+</head>
+<body>
+    <h1>Video Conference</h1>
+    <button onclick="createRoom()">Start</button>
+    <div id="roomID"></div>
+
+    <script>
+        function createRoom() {
+            fetch('/room/create')
+                .then(response => response.text())
+                .then(roomID => {
+                    const roomURL = window.location.origin + '/room/' + roomID;
+                    document.getElementById('roomID').innerHTML = 'Room ID: ' + roomID + ' | <a href="' + roomURL + '">Copy Link</a>';
+                    window.location.href = roomURL;
+                });
+        }
+    </script>
+</body>
+</html>
