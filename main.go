@@ -8,7 +8,7 @@ package main
 
 import (
 	"log"
-	apps "main/external-api"
+	apps "main/internal/pkg/external-api"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
