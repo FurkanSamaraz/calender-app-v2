@@ -44,7 +44,7 @@ func generateID() string {
 
 func generateRoomID() string {
 	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	rand.Seed(time.Now().UnixNano())
+
 	b := make([]byte, 10)
 	for i := range b {
 		b[i] = charset[rand.Intn(len(charset))]
@@ -141,11 +141,8 @@ func createRoom(c *fiber.Ctx) error {
 	rooms[roomID] = room
 
 	go func() {
-		for {
-			select {
-			case message := <-room.Messages:
-				room.Broadcast(message)
-			}
+		for message := range room.Messages {
+			room.Broadcast(message)
 		}
 	}()
 
